@@ -47,6 +47,12 @@ class Validator
    * @var \GuzzleHttp\Client
    */
   protected $_client = null;
+  
+  /**
+   * Hold the http client config
+   * @var array
+   */
+  protected $_clientConfig = [];
 
   public function __construct(string $endpoint = self::ENDPOINT_PRODUCTION)
   {
@@ -157,10 +163,24 @@ class Validator
   protected function getClient() : HttpClient
   {
     if ($this->_client == null) {
-      $this->_client = new HttpClient(['base_uri' => $this->_endpoint]);
+      $config = array_merge(['base_uri' => $this->_endpoint], $this->_clientConfig);
+      $this->_client = new HttpClient($config);
     }
 
     return $this->_client;
+  }
+  
+  /**
+   * Set http client options
+   * 
+   * @param mixed $options
+   * @return Validator
+   */
+  public function setClientConfig($config) : self
+  {
+      $this->_clientConfig = $config;
+      
+      return $this;
   }
 
   /**
