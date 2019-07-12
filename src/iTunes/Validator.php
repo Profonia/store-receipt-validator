@@ -234,7 +234,8 @@ class Validator
     // on a 21007 error retry the request in the sandbox environment (if the current environment is Production)
     // these are receipts from apple review team
     if ($this->_endpoint == self::ENDPOINT_PRODUCTION && $response->getResultCode() == Response::RESULT_SANDBOX_RECEIPT_SENT_TO_PRODUCTION) {
-      $client = new HttpClient(['base_uri' => self::ENDPOINT_SANDBOX]);
+      $config = array_merge(['base_uri' => self::ENDPOINT_SANDBOX], $this->_clientConfig);
+      $client = new HttpClient($config);
 
       $httpResponse = $client->request('POST', null, ['body' => $this->encodeRequest()]);
 
